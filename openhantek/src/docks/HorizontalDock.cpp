@@ -9,6 +9,7 @@
 #include <QLabel>
 #include <QSignalBlocker>
 #include <QThread>
+#include <QShortcut>
 
 #include <cmath>
 
@@ -51,6 +52,17 @@ HorizontalDock::HorizontalDock( DsoSettingsScope *scope, const Dso::ControlSpeci
     timebaseSiSpinBox->setSteps( timebaseSteps );
     timebaseSiSpinBox->setMinimum( 1e-9 );
     timebaseSiSpinBox->setMaximum( 1e3 );
+
+    // Add keyboard shortcuts for timebase spinbox
+    QShortcut *timebaseIncrementShortcut = new QShortcut(QKeySequence("Ctrl+Right"), this);
+    connect(timebaseIncrementShortcut, &QShortcut::activated, this, [this]() {
+        timebaseSiSpinBox->stepBy(1);
+    });
+
+    QShortcut *timebaseDecrementShortcut = new QShortcut(QKeySequence("Ctrl+Left"), this);
+    connect(timebaseDecrementShortcut, &QShortcut::activated, this, [this]() {
+        timebaseSiSpinBox->stepBy(-1);
+    });    
 
     formatLabel = new QLabel( tr( "Format" ) );
     formatComboBox = new QComboBox();
