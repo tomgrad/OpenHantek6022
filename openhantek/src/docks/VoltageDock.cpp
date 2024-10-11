@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QDockWidget>
 #include <QSignalBlocker>
+#include <QShortcut>
 
 #include <cmath>
 
@@ -142,6 +143,12 @@ VoltageDock::VoltageDock( DsoSettingsScope *scope, const Dso::ControlSpecificati
                     mask = Dso::mathChannelsUsed( Dso::MathMode( this->scope->voltage[ 2 ].couplingOrMathIndex ) );
             }
             emit usedChannelChanged( channel, mask ); // channel bit mask 0b01, 0b10, 0b11
+        } );
+    
+        // add keyboard shortcut CTRL+channel to set focus to the gain combobox
+        QShortcut *shortcut = new QShortcut( QKeySequence( Qt::CTRL + Qt::Key_1 + channel ), this );
+        connect( shortcut, &QShortcut::activated, this, [ this, channel ]() {
+            this->channelBlocks[ channel ].gainComboBox->setFocus();
         } );
     }
 
